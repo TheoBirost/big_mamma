@@ -1,23 +1,28 @@
-# Use an official Node runtime as a parent image
-FROM node:18-alpine
+# ---- Build ----
+FROM node:20-alpine AS build
 
-# Set the working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json
 COPY package*.json ./
-
-# Install dependencies
 RUN npm install
 
-# Copy the rest of the application code
 COPY . .
-
-# Build the Tailwind CSS
 RUN npm run build
 
-# Expose the port the app runs on
-EXPOSE 8080
+# ---- Nginx ----
+FROM nginx:alpine
 
-# Define the command to run the app
-CMD ["npm", "start"]
+# Supprime la config par défaut
+RUN rm /etc/nginx/conf.d/default.conf
+
+# Ajoute notre config
+COPY nginx.conf /etc/nginx/conf.d
+
+# Copie les fichiers statiques
+# Comme ce n'est pas un projet Vue/Vite qui build dans dist, on copie les fichiers nécessaires
+COPY --from=build /app/index.html /usr/share/nginx/html/
+COPY --from=build /app/src/output.css /usr/share/nginx/html/src/
+COPY --from=build /app/img /usr/share/nginx/html/img
+
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
