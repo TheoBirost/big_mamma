@@ -6,6 +6,6 @@
   },
   "scripts": {
     "build": "tailwindcss -i ./src/input.css -o ./src/output.css --minify",
-    "start": "http-server -p 8080"
+    "start": "http-server src -p 8080 -a 0.0.0.0"
   }
 }
