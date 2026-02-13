@@ -1,4 +1,18 @@
 User-agent: *
 Allow: /
 
+# Masquer les fichiers de configuration et système
+Disallow: /nginx.conf
+Disallow: /package.json
+Disallow: /package-lock.json
+Disallow: /Dockerfile
+Disallow: /README.md
+Disallow: /.git/
+Disallow: /.gitignore
+
+# Masquer le dossier source mais autoriser le CSS compilé
+Disallow: /src/
+Allow: /src/output.css
+
+# Indiquer l'emplacement du sitemap (à modifier avec votre vrai domaine)
 Sitemap: https://votre-domaine.com/sitemap.xml
