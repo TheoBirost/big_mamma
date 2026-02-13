@@ -1,5 +1,5 @@
 # Dockerfile Sécurisé - Big Mamma Project
-# Version: 2.0
+# Version: 2.1
 # Date: 2026-02-13
 
 # ---- Build Stage ----
@@ -23,7 +23,7 @@ FROM nginx:alpine
 # Métadonnées de sécurité
 LABEL maintainer="security@example.com"
 LABEL security.scan="required"
-LABEL version="2.0"
+LABEL version="2.1"
 
 # Installation des outils de sécurité
 RUN apk add --no-cache \
@@ -41,6 +41,9 @@ COPY nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=build /app/index.html /usr/share/nginx/html/
 COPY --from=build /app/src/output.css /usr/share/nginx/html/src/
 COPY --from=build /app/img /usr/share/nginx/html/img/
+
+# Copie du fichier robots.txt
+COPY robots.txt /usr/share/nginx/html/
 
 # Création des pages d'erreur personnalisées
 RUN echo '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>403 Forbidden</title></head><body><h1>403 - Access Denied</h1><p>Your IP has been blocked due to suspicious activity.</p></body></html>' > /usr/share/nginx/html/403.html
